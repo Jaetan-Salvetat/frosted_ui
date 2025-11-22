@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class FrostedButtonStyle {
   /// Rayon de bordure fixe pour tous les boutons standards
   static const double buttonRadius = 12.0;
-  
+
   /// Rayon de bordure pour les boutons circulaires
   static const double circularRadius = 100.0;
 }
@@ -17,7 +17,7 @@ class FrostedElevatedButton extends StatelessWidget {
   final Color? foregroundColor;
   final double? elevation;
   final EdgeInsets padding;
-  
+
   const FrostedElevatedButton({
     super.key,
     required this.child,
@@ -27,7 +27,7 @@ class FrostedElevatedButton extends StatelessWidget {
     this.elevation,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -44,7 +44,7 @@ class FrostedElevatedButton extends StatelessWidget {
       child: child,
     );
   }
-  
+
   /// Crée un bouton élevé avec une icône
   factory FrostedElevatedButton.icon({
     Key? key,
@@ -54,7 +54,10 @@ class FrostedElevatedButton extends StatelessWidget {
     Color? backgroundColor,
     Color? foregroundColor,
     double? elevation,
-    EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+    EdgeInsets padding = const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 10,
+    ),
   }) {
     return FrostedElevatedButton(
       key: key,
@@ -65,11 +68,7 @@ class FrostedElevatedButton extends StatelessWidget {
       padding: padding,
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          icon,
-          const SizedBox(width: 8),
-          label,
-        ],
+        children: [icon, const SizedBox(width: 8), label],
       ),
     );
   }
@@ -81,7 +80,7 @@ class FrostedTextButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Color? foregroundColor;
   final EdgeInsets padding;
-  
+
   const FrostedTextButton({
     super.key,
     required this.child,
@@ -89,7 +88,7 @@ class FrostedTextButton extends StatelessWidget {
     this.foregroundColor,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
@@ -104,7 +103,7 @@ class FrostedTextButton extends StatelessWidget {
       child: child,
     );
   }
-  
+
   /// Crée un bouton textuel avec une icône
   factory FrostedTextButton.icon({
     Key? key,
@@ -112,7 +111,10 @@ class FrostedTextButton extends StatelessWidget {
     required Widget icon,
     required Widget label,
     Color? foregroundColor,
-    EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+    EdgeInsets padding = const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 10,
+    ),
   }) {
     return FrostedTextButton(
       key: key,
@@ -121,11 +123,7 @@ class FrostedTextButton extends StatelessWidget {
       padding: padding,
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          icon,
-          const SizedBox(width: 8),
-          label,
-        ],
+        children: [icon, const SizedBox(width: 8), label],
       ),
     );
   }
@@ -138,7 +136,7 @@ class FrostedOutlinedButton extends StatelessWidget {
   final Color? foregroundColor;
   final Color? borderColor;
   final EdgeInsets padding;
-  
+
   const FrostedOutlinedButton({
     super.key,
     required this.child,
@@ -147,7 +145,7 @@ class FrostedOutlinedButton extends StatelessWidget {
     this.borderColor,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
@@ -163,7 +161,7 @@ class FrostedOutlinedButton extends StatelessWidget {
       child: child,
     );
   }
-  
+
   /// Crée un bouton avec contour avec une icône
   factory FrostedOutlinedButton.icon({
     Key? key,
@@ -172,7 +170,10 @@ class FrostedOutlinedButton extends StatelessWidget {
     required Widget label,
     Color? foregroundColor,
     Color? borderColor,
-    EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+    EdgeInsets padding = const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 10,
+    ),
   }) {
     return FrostedOutlinedButton(
       key: key,
@@ -182,11 +183,7 @@ class FrostedOutlinedButton extends StatelessWidget {
       padding: padding,
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          icon,
-          const SizedBox(width: 8),
-          label,
-        ],
+        children: [icon, const SizedBox(width: 8), label],
       ),
     );
   }
@@ -200,7 +197,7 @@ class FrostedIconButton extends StatelessWidget {
   final Color? backgroundColor;
   final double size;
   final double? iconSize;
-  
+
   const FrostedIconButton({
     super.key,
     required this.icon,
@@ -210,7 +207,7 @@ class FrostedIconButton extends StatelessWidget {
     this.size = 40.0,
     this.iconSize,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -220,15 +217,12 @@ class FrostedIconButton extends StatelessWidget {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(FrostedButtonStyle.buttonRadius),
       ),
-      child: IconButton(
-        icon: Icon(icon),
-        onPressed: onPressed,
-        color: color,
-        iconSize: iconSize ?? size * 0.6,
-        padding: EdgeInsets.zero,
-        constraints: BoxConstraints(
-          minWidth: size,
-          minHeight: size,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(FrostedButtonStyle.buttonRadius),
+        splashColor: Theme.of(context).splashColor,
+        child: Center(
+          child: Icon(icon, color: color, size: iconSize ?? size * 0.6),
         ),
       ),
     );
@@ -243,7 +237,7 @@ class FrostedFloatingActionButton extends StatelessWidget {
   final Color? foregroundColor;
   final double elevation;
   final bool mini;
-  
+
   const FrostedFloatingActionButton({
     super.key,
     required this.child,
@@ -253,7 +247,7 @@ class FrostedFloatingActionButton extends StatelessWidget {
     this.elevation = 6.0,
     this.mini = false,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     // On utilise un border radius standard pour tous les FAB
@@ -269,7 +263,7 @@ class FrostedFloatingActionButton extends StatelessWidget {
       child: child,
     );
   }
-  
+
   /// Crée un bouton d'action flottant étendu
   static Widget extended({
     Key? key,
@@ -291,6 +285,124 @@ class FrostedFloatingActionButton extends StatelessWidget {
       ),
       icon: icon,
       label: label,
+    );
+  }
+}
+
+/// Bouton plein (FilledButton) avec style givré
+class FrostedFilledButton extends StatelessWidget {
+  final Widget child;
+  final VoidCallback? onPressed;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final EdgeInsets padding;
+
+  const FrostedFilledButton({
+    super.key,
+    required this.child,
+    required this.onPressed,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+        padding: padding,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(FrostedButtonStyle.buttonRadius),
+        ),
+      ),
+      child: child,
+    );
+  }
+
+  factory FrostedFilledButton.icon({
+    Key? key,
+    required VoidCallback? onPressed,
+    required Widget icon,
+    required Widget label,
+    Color? backgroundColor,
+    Color? foregroundColor,
+    EdgeInsets padding = const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 10,
+    ),
+  }) {
+    return FrostedFilledButton(
+      key: key,
+      onPressed: onPressed,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      padding: padding,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [icon, const SizedBox(width: 8), label],
+      ),
+    );
+  }
+}
+
+/// Bouton tonal (FilledButton.tonal) avec style givré
+class FrostedTonalButton extends StatelessWidget {
+  final Widget child;
+  final VoidCallback? onPressed;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final EdgeInsets padding;
+
+  const FrostedTonalButton({
+    super.key,
+    required this.child,
+    required this.onPressed,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.tonal(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+        padding: padding,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(FrostedButtonStyle.buttonRadius),
+        ),
+      ),
+      child: child,
+    );
+  }
+
+  factory FrostedTonalButton.icon({
+    Key? key,
+    required VoidCallback? onPressed,
+    required Widget icon,
+    required Widget label,
+    Color? backgroundColor,
+    Color? foregroundColor,
+    EdgeInsets padding = const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 10,
+    ),
+  }) {
+    return FrostedTonalButton(
+      key: key,
+      onPressed: onPressed,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      padding: padding,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [icon, const SizedBox(width: 8), label],
+      ),
     );
   }
 }

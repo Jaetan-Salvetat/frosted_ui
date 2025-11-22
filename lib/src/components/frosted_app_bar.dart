@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class FrostedAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
-  final bool showBackButton;
+  final Widget? leading;
   final double height;
   final double blurStrength;
 
@@ -12,9 +12,9 @@ class FrostedAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     this.actions,
+    this.leading,
     this.height = 56,
     this.blurStrength = 7,
-    this.showBackButton = true,
   });
 
   @override
@@ -26,13 +26,11 @@ class FrostedAppBar extends StatelessWidget implements PreferredSizeWidget {
           centerTitle: true,
           title: Text(title),
           actions: actions,
+          leading: leading,
           backgroundColor: Theme.of(
             context,
           ).colorScheme.surface.withValues(alpha: 0.7),
           surfaceTintColor: Colors.transparent,
-          leading: showBackButton
-              ? BackButton(onPressed: () => Navigator.pop(context))
-              : null,
         ),
       ),
     );

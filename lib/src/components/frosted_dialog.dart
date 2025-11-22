@@ -43,6 +43,11 @@ class FrostedDialog extends StatelessWidget {
           decoration: BoxDecoration(
             color: dialogColor,
             borderRadius: BorderRadius.circular(borderRadius),
+            border: Border.all(
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.1),
+            ),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

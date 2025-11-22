@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:frosted_ui/frosted_ui.dart';
-
-import 'pages/components_page.dart';
-import 'pages/list_page.dart';
+import 'home_page.dart';
 
 void main() {
-  runApp(const FrostedUIDemo());
+  runApp(const FrostedExampleApp());
 }
 
-class FrostedUIDemo extends StatelessWidget {
-  const FrostedUIDemo({super.key});
+class FrostedExampleApp extends StatefulWidget {
+  const FrostedExampleApp({super.key});
+
+  @override
+  State<FrostedExampleApp> createState() => _FrostedExampleAppState();
+}
+
+class _FrostedExampleAppState extends State<FrostedExampleApp> {
+  ThemeMode _themeMode = ThemeMode.system;
+
+  void _toggleTheme() {
+    setState(() {
+      _themeMode = _themeMode == ThemeMode.dark
+          ? ThemeMode.light
+          : ThemeMode.dark;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,61 +30,20 @@ class FrostedUIDemo extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.indigo,
+          seedColor: Colors.deepPurple,
           brightness: Brightness.light,
         ),
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.indigo,
+          seedColor: Colors.deepPurple,
           brightness: Brightness.dark,
         ),
         useMaterial3: true,
       ),
-      themeMode: ThemeMode.system,
-      home: const HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
-  
-  final List<Widget> _pages = const [
-    ComponentsPage(),
-    ListPage(),
-  ];
-  
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_currentIndex],
-      bottomNavigationBar: FrostedBottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.widgets),
-            label: 'Composants',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Liste',
-          ),
-        ],
-      ),
+      themeMode: _themeMode,
+      home: ExampleHomePage(onThemeToggle: _toggleTheme),
     );
   }
 }
