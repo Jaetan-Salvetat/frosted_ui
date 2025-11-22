@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frosted_ui/frosted_ui.dart';
 
 class FrostedChip extends StatelessWidget {
   final Widget label;
@@ -48,7 +49,7 @@ class FrostedChip extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onPressed,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(FrostedButtonStyle.buttonRadius),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: EdgeInsets.fromLTRB(
@@ -59,7 +60,9 @@ class FrostedChip extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: effectiveBackgroundColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(
+              FrostedButtonStyle.buttonRadius,
+            ),
             border: Border.all(color: effectiveBorderColor, width: 1),
           ),
           child: Row(
@@ -81,8 +84,8 @@ class FrostedChip extends StatelessWidget {
                 InkWell(
                   onTap: onDeleted,
                   borderRadius: BorderRadius.circular(
-                    10,
-                  ), // Close icon radius can stay small or match? 10 is for icon button touch area.
+                    FrostedButtonStyle.buttonRadius,
+                  ),
                   child: Icon(
                     Icons.close,
                     size: 18,
