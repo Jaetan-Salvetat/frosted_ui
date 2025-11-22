@@ -58,15 +58,8 @@ class FrostedBadge extends StatelessWidget {
               decoration: BoxDecoration(
                 color: badgeColor,
                 shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: badgeColor.withOpacity(0.4),
-                    blurRadius: 4,
-                    spreadRadius: 1,
-                  ),
-                ],
                 border: Border.all(
-                  color: theme.scaffoldBackgroundColor.withOpacity(0.5),
+                  color: theme.scaffoldBackgroundColor.withValues(alpha: 0.5),
                   width: 1,
                 ),
               ),
@@ -94,15 +87,8 @@ class FrostedBadge extends StatelessWidget {
             decoration: BoxDecoration(
               color: badgeColor,
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: badgeColor.withOpacity(0.4),
-                  blurRadius: 6,
-                  spreadRadius: 1,
-                ),
-              ],
               border: Border.all(
-                color: Colors.white.withOpacity(0.2),
+                color: theme.colorScheme.surface.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),

@@ -36,12 +36,13 @@ class FrostedTooltip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
 
     final bgColor = isDark
-        ? const Color(0xFF303030).withOpacity(0.9)
-        : const Color(0xFFFAFAFA).withOpacity(0.9);
-    final txtColor = isDark ? Colors.white : Colors.black87;
+        ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.9)
+        : colorScheme.surfaceContainer.withValues(alpha: 0.9);
+    final txtColor = colorScheme.onSurface;
 
     return Tooltip(
       message: message,
@@ -64,14 +65,12 @@ class FrostedTooltip extends StatelessWidget {
             color: bgColor,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isDark
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.05),
+              color: colorScheme.onSurface.withValues(alpha: 0.1),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: colorScheme.shadow.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),

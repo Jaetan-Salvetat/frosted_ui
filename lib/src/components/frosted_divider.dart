@@ -19,13 +19,11 @@ class FrostedDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
 
     final dividerColor =
-        color ??
-        (isDark
-            ? Colors.white.withOpacity(0.1)
-            : Colors.black.withOpacity(0.05));
+        color ?? colorScheme.onSurface.withValues(alpha: isDark ? 0.1 : 0.05);
 
     return SizedBox(
       height: height,
@@ -37,9 +35,9 @@ class FrostedDivider extends StatelessWidget {
             borderRadius: BorderRadius.circular(thickness / 2),
             gradient: LinearGradient(
               colors: [
-                dividerColor.withOpacity(0.0),
+                dividerColor.withValues(alpha: 0.0),
                 dividerColor,
-                dividerColor.withOpacity(0.0),
+                dividerColor.withValues(alpha: 0.0),
               ],
               stops: const [0.0, 0.5, 1.0],
             ),

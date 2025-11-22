@@ -82,41 +82,21 @@ class _FrostedTextFieldState extends State<FrostedTextField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
 
     final primaryColor = widget.accentColor ?? colorScheme.primary;
     final errorColor = colorScheme.error;
 
     // Couleurs de fond
-    final baseColor = isDark
-        ? colorScheme.surfaceContainerLow
-        : colorScheme.surfaceContainer;
-
     final backgroundColor = _isFocused
-        ? baseColor.withOpacity(isDark ? 0.8 : 0.9)
-        : baseColor.withOpacity(isDark ? 0.6 : 0.7);
+        ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
+        : colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
 
     // Bordure
     final borderColor = widget.errorText != null
-        ? errorColor.withOpacity(0.5)
+        ? errorColor
         : _isFocused
-        ? primaryColor.withOpacity(0.5)
-        : isDark
-        ? Colors.white.withOpacity(0.1)
-        : Colors.black.withOpacity(0.05);
-
-    // Glow effect (ombre portée colorée)
-    final List<BoxShadow> shadows = [];
-    if (_isFocused || widget.errorText != null) {
-      final glowColor = widget.errorText != null ? errorColor : primaryColor;
-      shadows.add(
-        BoxShadow(
-          color: glowColor.withOpacity(0.15),
-          blurRadius: 8,
-          spreadRadius: 0,
-        ),
-      );
-    }
+        ? primaryColor
+        : colorScheme.onSurface.withValues(alpha: 0.1);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,7 +114,7 @@ class _FrostedTextFieldState extends State<FrostedTextField> {
                     ? errorColor
                     : _isFocused
                     ? primaryColor
-                    : theme.textTheme.bodyMedium?.color?.withOpacity(0.8),
+                    : theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.8),
               ),
             ),
           ),
@@ -145,11 +125,7 @@ class _FrostedTextFieldState extends State<FrostedTextField> {
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: borderColor,
-              width: _isFocused || widget.errorText != null ? 1.5 : 1.0,
-            ),
-            boxShadow: shadows,
+            border: Border.all(color: borderColor, width: 1.0),
           ),
           child: TextField(
             controller: widget.controller,
@@ -158,7 +134,7 @@ class _FrostedTextFieldState extends State<FrostedTextField> {
               hintText: widget.hintText,
               hintStyle: TextStyle(
                 color: theme.textTheme.bodyMedium?.color?.withValues(
-                  alpha: 0.4,
+                  alpha: 0.5,
                 ),
               ),
               prefixIcon: widget.prefixIcon,

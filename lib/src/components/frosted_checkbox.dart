@@ -20,7 +20,6 @@ class FrostedCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
 
     final primaryColor = activeColor ?? colorScheme.primary;
     final onPrimaryColor = checkColor ?? colorScheme.onPrimary;
@@ -35,24 +34,14 @@ class FrostedCheckbox extends StatelessWidget {
         decoration: BoxDecoration(
           color: value
               ? primaryColor
-              : colorScheme.onSurface.withValues(alpha: isDark ? 0.1 : 0.05),
+              : colorScheme.onSurface.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
             color: value
                 ? primaryColor
-                : colorScheme.onSurface.withValues(alpha: isDark ? 0.2 : 0.1),
+                : colorScheme.onSurface.withValues(alpha: 0.2),
             width: 1.5,
           ),
-          boxShadow: value
-              ? [
-                  BoxShadow(
-                    color: primaryColor.withValues(alpha: 0.4),
-                    blurRadius: 8,
-                    spreadRadius: -2,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
         ),
         child: value
             ? Icon(Icons.check, size: size * 0.7, color: onPrimaryColor)
@@ -82,7 +71,6 @@ class FrostedRadio<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
 
     final primaryColor = activeColor ?? colorScheme.primary;
     final isSelected = value == groupValue;
@@ -97,25 +85,13 @@ class FrostedRadio<T> extends StatelessWidget {
         padding: EdgeInsets.all(size * 0.2),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: isDark
-              ? colorScheme.onSurface.withValues(alpha: 0.05)
-              : colorScheme.onSurface.withValues(alpha: 0.02),
+          color: colorScheme.onSurface.withValues(alpha: 0.05),
           border: Border.all(
             color: isSelected
                 ? primaryColor
-                : colorScheme.onSurface.withValues(alpha: isDark ? 0.2 : 0.1),
+                : colorScheme.onSurface.withValues(alpha: 0.2),
             width: 1.5,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: primaryColor.withValues(alpha: 0.4),
-                    blurRadius: 8,
-                    spreadRadius: -2,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
         ),
         child: isSelected
             ? Container(

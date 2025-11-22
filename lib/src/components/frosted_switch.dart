@@ -22,32 +22,27 @@ class FrostedSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
 
     final primaryColor = activeColor ?? colorScheme.primary;
-    final trackActive = activeTrackColor ?? primaryColor.withValues(alpha: 0.5);
+    final trackActive = activeTrackColor ?? primaryColor;
 
-    final thumbInactive =
-        inactiveThumbColor ??
-        (isDark ? colorScheme.onSurfaceVariant : colorScheme.surface);
     final trackInactive =
-        inactiveTrackColor ??
-        colorScheme.onSurface.withValues(alpha: isDark ? 0.1 : 0.1);
+        inactiveTrackColor ?? colorScheme.surfaceContainerHighest;
 
     return GestureDetector(
       onTap: onChanged != null ? () => onChanged!(!value) : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        width: 52,
-        height: 32,
+        width: 50,
+        height: 30,
         padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(15),
           color: value ? trackActive : trackInactive,
           border: Border.all(
             color: value
-                ? primaryColor.withValues(alpha: 0.5)
-                : colorScheme.onSurface.withValues(alpha: isDark ? 0.1 : 0.05),
+                ? Colors.transparent
+                : colorScheme.onSurface.withValues(alpha: 0.1),
             width: 1,
           ),
         ),
@@ -58,23 +53,17 @@ class FrostedSwitch extends StatelessWidget {
               curve: Curves.easeInOut,
               alignment: value ? Alignment.centerRight : Alignment.centerLeft,
               child: Container(
-                width: 26,
-                height: 26,
+                width: 24,
+                height: 24,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: value ? primaryColor : thumbInactive,
+                  color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: colorScheme.shadow.withValues(alpha: 0.2),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
-                    if (value)
-                      BoxShadow(
-                        color: primaryColor.withValues(alpha: 0.4),
-                        blurRadius: 8,
-                        spreadRadius: 1,
-                      ),
                   ],
                 ),
               ),

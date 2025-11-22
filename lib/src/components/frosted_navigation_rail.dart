@@ -61,12 +61,10 @@ class FrostedNavigationRail extends StatelessWidget {
             ? colorScheme.surfaceContainerLow
             : colorScheme.surfaceContainer);
 
-    final frostedColor = baseColor.withValues(alpha: isDark ? 0.8 : 0.7);
+    final frostedColor = baseColor.withValues(alpha: 0.7);
 
     // Border color
-    final borderColor = colorScheme.onSurface.withValues(
-      alpha: isDark ? 0.1 : 0.05,
-    );
+    final borderColor = colorScheme.onSurface.withValues(alpha: 0.1);
 
     return ClipRect(
       child: BackdropFilter(

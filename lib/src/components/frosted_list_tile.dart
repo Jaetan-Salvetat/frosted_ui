@@ -44,11 +44,14 @@ class FrostedListTile extends StatelessWidget {
               const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: selected
-                ? primaryColor.withOpacity(0.1)
+                ? primaryColor.withValues(alpha: 0.1)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: selected
-                ? Border.all(color: primaryColor.withOpacity(0.3), width: 1)
+                ? Border.all(
+                    color: primaryColor.withValues(alpha: 0.3),
+                    width: 1,
+                  )
                 : Border.all(color: Colors.transparent, width: 1),
           ),
           child: Row(
@@ -83,9 +86,9 @@ class FrostedListTile extends StatelessWidget {
                       DefaultTextStyle(
                         style: TextStyle(
                           color: selected
-                              ? primaryColor.withOpacity(0.8)
-                              : theme.textTheme.bodyMedium?.color?.withOpacity(
-                                  0.7,
+                              ? primaryColor.withValues(alpha: 0.8)
+                              : theme.textTheme.bodyMedium?.color?.withValues(
+                                  alpha: 0.7,
                                 ),
                           fontSize: 14,
                         ),
@@ -101,7 +104,7 @@ class FrostedListTile extends StatelessWidget {
                   data: IconThemeData(
                     color: selected
                         ? primaryColor
-                        : theme.iconTheme.color?.withOpacity(0.5),
+                        : theme.iconTheme.color?.withValues(alpha: 0.5),
                     size: 20,
                   ),
                   child: trailing!,

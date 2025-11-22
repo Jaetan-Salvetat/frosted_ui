@@ -26,14 +26,10 @@ class FrostedSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
 
     final primaryColor = activeColor ?? colorScheme.primary;
     final trackInactive =
-        inactiveColor ??
-        (isDark
-            ? Colors.white.withOpacity(0.1)
-            : Colors.black.withOpacity(0.05));
+        inactiveColor ?? colorScheme.onSurface.withValues(alpha: 0.1);
 
     return SliderTheme(
       data: SliderTheme.of(context).copyWith(
@@ -41,13 +37,13 @@ class FrostedSlider extends StatelessWidget {
         activeTrackColor: primaryColor,
         inactiveTrackColor: trackInactive,
         thumbColor: primaryColor,
-        overlayColor: primaryColor.withOpacity(0.1),
+        overlayColor: primaryColor.withValues(alpha: 0.1),
         valueIndicatorColor: primaryColor,
         valueIndicatorTextStyle: TextStyle(color: colorScheme.onPrimary),
         thumbShape: _FrostedThumbShape(
           enabledThumbRadius: 10,
-          elevation: 4,
-          pressedElevation: 8,
+          elevation: 2,
+          pressedElevation: 4,
         ),
         trackShape: _FrostedTrackShape(),
         overlayShape: const RoundSliderOverlayShape(overlayRadius: 24),
@@ -103,38 +99,19 @@ class _FrostedThumbShape extends SliderComponentShape {
     final Color color = colorTween.evaluate(enableAnimation)!;
     final double radius = enabledThumbRadius;
 
-    final Tween<double> elevationTween = Tween<double>(
-      begin: elevation,
-      end: pressedElevation,
-    );
-    final double evaluatedElevation = elevationTween.evaluate(
-      activationAnimation,
-    );
-
-    // Ombre
+    // Simple shadow
     final Path path = Path()
       ..addOval(Rect.fromCircle(center: center, radius: radius));
-    canvas.drawShadow(path, Colors.black, evaluatedElevation, true);
+    canvas.drawShadow(path, Colors.black, 2, true);
 
-    // Cercle principal
+    // Main circle
     canvas.drawCircle(center, radius, Paint()..color = color);
 
-    // Glow effect
-    if (activationAnimation.value > 0) {
-      canvas.drawCircle(
-        center,
-        radius + (activationAnimation.value * 4),
-        Paint()
-          ..color = color.withOpacity(0.3 * activationAnimation.value)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
-      );
-    }
-
-    // Centre blanc/clair pour effet de relief
+    // White center dot for relief
     canvas.drawCircle(
       center,
       radius * 0.4,
-      Paint()..color = Colors.white.withOpacity(0.3),
+      Paint()..color = Colors.white.withValues(alpha: 0.3),
     );
   }
 }

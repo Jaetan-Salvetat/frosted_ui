@@ -49,12 +49,14 @@ class FrostedSnackbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
 
     final bgColor =
         backgroundColor ??
-        (isDark ? const Color(0xFF303030) : const Color(0xFFFAFAFA));
-    final txtColor = textColor ?? (isDark ? Colors.white : Colors.black87);
+        (isDark ? colorScheme.surfaceContainerHighest : colorScheme.surface);
+    final txtColor =
+        textColor ?? (isDark ? colorScheme.onSurface : colorScheme.onSurface);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
@@ -63,17 +65,15 @@ class FrostedSnackbar extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: bgColor.withOpacity(0.8),
+            color: bgColor.withValues(alpha: 0.8),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isDark
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.05),
+              color: colorScheme.onSurface.withValues(alpha: 0.1),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: colorScheme.shadow.withValues(alpha: 0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
