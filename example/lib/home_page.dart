@@ -19,6 +19,7 @@ class ExampleHomePage extends StatefulWidget {
 class _ExampleHomePageState extends State<ExampleHomePage> {
   int _selectedIndex = 0;
   bool _hideAppBar = false;
+  FrostedDrawerMode _drawerMode = FrostedDrawerMode.scrimBlur;
 
   List<_DemoSection> get _sections => [
     const _DemoSection(
@@ -59,10 +60,17 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
 
     // Gradient background to showcase the frosted effect
     return FrostedScaffold(
+      drawerMode: _drawerMode,
       appBar: _hideAppBar
           ? null
           : FrostedAppBar(
               title: currentSection.title,
+              leading: Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () => FrostedScaffold.of(context).openDrawer(),
+                ),
+              ),
               actions: [
                 FrostedIconButton(
                   icon: isDark ? Icons.light_mode : Icons.dark_mode,
@@ -78,14 +86,58 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             // Reset app bar visibility when changing page (optional but safer)
             if (index != 3) _hideAppBar = false;
           });
-          Navigator.pop(context); // Close drawer
+          // FrostedScaffold2 manages drawer state, we need to close it manually
+          // But since we are inside the drawer, context lookup might be tricky if drawer is overlay.
+          // However, FrostedNavigationDrawer items usually just fire callback.
+          // We need to find the Scaffold2 context.
+          // Actually, the drawer is part of the stack, so it should work.
+          // BUT wait, we are rebuilding the page state.
+          // FrostedScaffold2State has closeDrawer().
+          // We can use a GlobalKey or context traversal.
+          // Let's try context first.
         },
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(28, 16, 16, 10),
-            child: Text(
-              'Frosted UI',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Frosted UI',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Drawer Mode',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).textTheme.bodySmall?.color,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest
+                        .withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: const EdgeInsets.all(4),
+                  child: Row(
+                    children: [
+                      _buildModeToggleItem(
+                        context,
+                        'Blur',
+                        FrostedDrawerMode.scrimBlur,
+                      ),
+                      _buildModeToggleItem(
+                        context,
+                        'Push',
+                        FrostedDrawerMode.push,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           const Divider(indent: 28, endIndent: 28),
@@ -98,6 +150,55 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
         ],
       ),
       child: currentSection.child,
+    );
+  }
+
+  Widget _buildModeToggleItem(
+    BuildContext context,
+    String label,
+    FrostedDrawerMode mode,
+  ) {
+    final isSelected = _drawerMode == mode;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() => _drawerMode = mode);
+          // Close drawer after switching mode? Maybe keep it open to see effect?
+          // User said "voir le changement". Keep open might be buggy if layout changes drastically.
+          // But FrostedScaffold2 handles it.
+          // Let's close it to be safe and show the transition next time.
+          // Actually, switching mode while open might jump.
+          // Let's just setState.
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? colorScheme.surface : Colors.transparent,
+            borderRadius: BorderRadius.circular(6),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 2,
+                    ),
+                  ]
+                : null,
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              color: isSelected
+                  ? colorScheme.onSurface
+                  : colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
