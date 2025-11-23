@@ -87,6 +87,24 @@ class _InputsDemoState extends State<InputsDemo> {
           ],
           onChanged: (v) => setState(() => _dropdownValue = v),
         ),
+
+        // Filler space to push content down
+        const SizedBox(height: 400),
+
+        const SectionHeader('Bottom Dropdown (Test Upward)'),
+        FrostedDropdown<String>(
+          value: _dropdownValue,
+          hint: 'Should open upwards',
+          items: List.generate(
+            10,
+            (index) => DropdownMenuItem(
+              value: 'Item $index',
+              child: Text('Item $index'),
+            ),
+          ),
+          onChanged: (v) => setState(() => _dropdownValue = v),
+        ),
+        const SizedBox(height: 20), // Just a tiny padding at bottom
       ],
     );
   }

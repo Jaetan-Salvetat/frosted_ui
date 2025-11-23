@@ -1,6 +1,6 @@
 name: frosted_ui
 description: "A collection of beautiful frosted glass UI components for Flutter applications."
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/jaetan/frosted_ui
 
 environment:

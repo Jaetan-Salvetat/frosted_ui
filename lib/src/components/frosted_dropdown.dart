@@ -26,7 +26,7 @@ class FrostedDropdown<T> extends StatefulWidget {
 }
 
 class _FrostedDropdownState<T> extends State<FrostedDropdown<T>> {
-  final LayerLink _layerLink = LayerLink();
+  // Removed _layerLink as we use absolute positioning with CustomSingleChildLayout
   bool _isOpen = false;
   OverlayEntry? _overlayEntry;
 
@@ -54,7 +54,11 @@ class _FrostedDropdownState<T> extends State<FrostedDropdown<T>> {
 
   void _showOverlay() {
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
-    final size = renderBox.size;
+    final offset = renderBox.localToGlobal(Offset.zero);
+    final buttonRect = offset & renderBox.size;
+    final mediaQuery = MediaQuery.of(context);
+    final screenHeight = mediaQuery.size.height;
+    final padding = mediaQuery.padding;
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Stack(
@@ -72,15 +76,14 @@ class _FrostedDropdownState<T> extends State<FrostedDropdown<T>> {
               child: Container(color: Colors.transparent),
             ),
           ),
-          // Dropdown menu
-          Positioned(
-            width: size.width,
-            child: CompositedTransformFollower(
-              link: _layerLink,
-              showWhenUnlinked: false,
-              offset: Offset(0.0, size.height + 5.0),
-              child: _buildDropdownMenu(),
+          // Dropdown menu with custom layout
+          CustomSingleChildLayout(
+            delegate: _DropdownMenuLayoutDelegate(
+              buttonRect: buttonRect,
+              screenHeight: screenHeight,
+              padding: padding,
             ),
+            child: _buildDropdownMenu(),
           ),
         ],
       ),
@@ -182,53 +185,97 @@ class _FrostedDropdownState<T> extends State<FrostedDropdown<T>> {
       }
     }
 
-    return CompositedTransformTarget(
-      link: _layerLink,
-      child: InkWell(
-        onTap: _toggleDropdown,
-        borderRadius: BorderRadius.circular(widget.borderRadius),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-            border: Border.all(
-              color: _isOpen
-                  ? theme.colorScheme.primary.withValues(alpha: 0.5)
-                  : theme.colorScheme.onSurface.withValues(
-                      alpha: isDark ? 0.1 : 0.1,
-                    ),
-              width: 1,
-            ),
+    return InkWell(
+      onTap: _toggleDropdown,
+      borderRadius: BorderRadius.circular(widget.borderRadius),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+          border: Border.all(
+            color: _isOpen
+                ? theme.colorScheme.primary.withValues(alpha: 0.5)
+                : theme.colorScheme.onSurface.withValues(
+                    alpha: isDark ? 0.1 : 0.1,
+                  ),
+            width: 1,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: selectedWidget != null
-                    ? DefaultTextStyle(
-                        style: theme.textTheme.bodyLarge!,
-                        child: selectedWidget,
-                      )
-                    : Text(
-                        widget.hint ?? 'Select...',
-                        style: TextStyle(
-                          color: theme.textTheme.bodyMedium?.color?.withValues(
-                            alpha: 0.6,
-                          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: selectedWidget != null
+                  ? DefaultTextStyle(
+                      style: theme.textTheme.bodyLarge!,
+                      child: selectedWidget,
+                    )
+                  : Text(
+                      widget.hint ?? 'Select...',
+                      style: TextStyle(
+                        color: theme.textTheme.bodyMedium?.color?.withValues(
+                          alpha: 0.6,
                         ),
                       ),
-              ),
-              const SizedBox(width: 8),
-              widget.icon ??
-                  Icon(
-                    _isOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                    color: theme.iconTheme.color?.withValues(alpha: 0.7),
-                  ),
-            ],
-          ),
+                    ),
+            ),
+            const SizedBox(width: 8),
+            widget.icon ??
+                Icon(
+                  _isOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                  color: theme.iconTheme.color?.withValues(alpha: 0.7),
+                ),
+          ],
         ),
       ),
     );
+  }
+}
+
+class _DropdownMenuLayoutDelegate extends SingleChildLayoutDelegate {
+  final Rect buttonRect;
+  final double screenHeight;
+  final EdgeInsets padding;
+
+  _DropdownMenuLayoutDelegate({
+    required this.buttonRect,
+    required this.screenHeight,
+    required this.padding,
+  });
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
+    return constraints.copyWith(
+      maxHeight: 250.0,
+      minWidth: buttonRect.width,
+      maxWidth: buttonRect.width,
+    );
+  }
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) {
+    final double buttonBottom = buttonRect.bottom;
+    final double buttonTop = buttonRect.top;
+
+    final double spaceBelow = screenHeight - buttonBottom - padding.bottom;
+    final double spaceAbove = buttonTop - padding.top;
+
+    // Prefer below
+    bool showBelow = spaceBelow >= childSize.height;
+
+    if (!showBelow && spaceAbove > spaceBelow) {
+      // Not enough space below AND more space above -> Show above
+      return Offset(buttonRect.left, buttonTop - childSize.height - 5.0);
+    }
+
+    // Default: below
+    return Offset(buttonRect.left, buttonBottom + 5.0);
+  }
+
+  @override
+  bool shouldRelayout(_DropdownMenuLayoutDelegate oldDelegate) {
+    return buttonRect != oldDelegate.buttonRect ||
+        screenHeight != oldDelegate.screenHeight;
   }
 }
