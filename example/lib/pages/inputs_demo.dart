@@ -87,6 +87,34 @@ class _InputsDemoState extends State<InputsDemo> {
           ],
           onChanged: (v) => setState(() => _dropdownValue = v),
         ),
+        const SizedBox(height: 24),
+        const SectionHeader('Autocomplete'),
+        FrostedAutocomplete<String>(
+          optionsBuilder: (TextEditingValue textEditingValue) {
+            const options = [
+              'Apple',
+              'Banana',
+              'Cherry',
+              'Date',
+              'Elderberry',
+              'Fig',
+              'Grape',
+            ];
+            if (textEditingValue.text == '') {
+              return options;
+            }
+            return options.where((String option) {
+              return option.toLowerCase().contains(
+                textEditingValue.text.toLowerCase(),
+              );
+            });
+          },
+          onSelected: (String selection) {
+            debugPrint('You selected: $selection');
+          },
+          hintText: 'Search fruit...',
+          prefixIcon: const Icon(Icons.search),
+        ),
 
         // Filler space to push content down
         const SizedBox(height: 400),
@@ -105,6 +133,48 @@ class _InputsDemoState extends State<InputsDemo> {
           onChanged: (v) => setState(() => _dropdownValue = v),
         ),
         const SizedBox(height: 20), // Just a tiny padding at bottom
+
+        FrostedFilledButton(
+          onPressed: () {
+            FrostedBottomSheet.show(
+              context: context,
+              title: 'Dropdown in BottomSheet',
+              child: StatefulBuilder(
+                builder: (context, setState) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 300), // Simulate content
+                        const Text('Dropdown below:'),
+                        const SizedBox(height: 20),
+                        FrostedDropdown<String>(
+                          value: _dropdownValue,
+                          hint: 'Select in Sheet',
+                          items: List.generate(
+                            10,
+                            (index) => DropdownMenuItem(
+                              value: 'Sheet Item $index',
+                              child: Text('Sheet Item $index'),
+                            ),
+                          ),
+                          onChanged: (v) {
+                            setState(() => _dropdownValue = v);
+                            // Also update parent state if needed
+                            this.setState(() => _dropdownValue = v);
+                          },
+                        ),
+                        const SizedBox(height: 20), // Bottom padding
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+          child: const Text('Open Sheet with Dropdown'),
+        ),
+        const SizedBox(height: 100),
       ],
     );
   }

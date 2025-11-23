@@ -20,6 +20,7 @@ export 'src/components/frosted_snackbar.dart';
 export 'src/components/frosted_tabs.dart';
 export 'src/components/frosted_list_tile.dart';
 export 'src/components/frosted_dropdown.dart';
+export 'src/components/frosted_autocomplete.dart';
 export 'src/components/frosted_popup_menu.dart';
 export 'src/components/frosted_badge.dart';
 export 'src/components/frosted_divider.dart';
